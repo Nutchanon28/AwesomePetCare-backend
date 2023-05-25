@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -5,7 +6,12 @@ const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const cookieParser = require("cookie-parser");
 const credentials = require("./middleware/credentials");
-const PORT = 3500;
+const mongoose = require("mongoose");
+const connectDB = require("./config/dbConn");
+const User = require("./model/User")
+const PORT = process.env.PORT || 3500;
+
+connectDB();
 
 app.use(credentials);
 
@@ -17,9 +23,13 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.all("*", (req, res) => {
+app.all("*", async (req, res) => {
+  const users = await User.find();
   res.status(200);
-  res.json({ text: "Hello World" });
+  res.json(users);
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB");
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
