@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 // app.use("/", require("./routes/root"));
 app.use("/register", require("./routes/register"));
-// app.use("/login", require("./routes/login"));
+app.use("/login", require("./routes/login"));
 
 // app.use("/profile", require("./routes/profile"));
 
