@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
+const verifyJWT = require("./middleware/verifyJWT");
 const cookieParser = require("cookie-parser");
 const credentials = require("./middleware/credentials");
 const mongoose = require("mongoose");
@@ -26,8 +27,10 @@ app.use(cookieParser());
 // app.use("/", require("./routes/root"));
 app.use("/register", require("./routes/register"));
 app.use("/login", require("./routes/login"));
+app.use("/refresh", require("./routes/refresh"));
 
-// app.use("/profile", require("./routes/profile"));
+app.use(verifyJWT);
+app.use("/profile", require("./routes/profile"));
 
 app.all("*", async (req, res) => {
     const users = await User.find();

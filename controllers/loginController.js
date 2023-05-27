@@ -37,9 +37,10 @@ const handleLogin = async (req, res) => {
         console.log(result);
         console.log(roles);
 
+        // comment "secure: true" out when using Postman
         res.cookie("jwt", refreshToken, {
             httpOnly: true,
-            secure: true,
+            // secure: true,
             sameSite: "None",
             maxAge: 24 * 60 * 60 * 1000,
         });
