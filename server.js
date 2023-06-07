@@ -12,6 +12,8 @@ const connectDB = require("./config/dbConn");
 const User = require("./model/User");
 const PORT = process.env.PORT || 3500;
 
+const { getFileStream } = require("./s3");
+
 connectDB();
 
 app.use(credentials);
@@ -23,6 +25,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(cookieParser());
+
+app.get("/images/:key", (req, res) => {
+    console.log(req.params);
+    const key = req.params.key;
+    const readStream = getFileStream(key);
+
+    readStream.pipe(res);
+});
 
 // app.use("/", require("./routes/root"));
 app.use("/register", require("./routes/register"));

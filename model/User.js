@@ -18,6 +18,7 @@ const userSchema = new Schema({
         required: true,
     },
     name: String,
+    avatarFileKey: String,
     refreshToken: String,
 });
 
