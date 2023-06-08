@@ -42,6 +42,7 @@ app.use("/logout", require("./routes/logout"));
 
 app.use(verifyJWT);
 app.use("/profile", require("./routes/profile"));
+app.use("/pet", require("./routes/pet"));
 
 app.all("*", async (req, res) => {
     const users = await User.find();
