@@ -1,6 +1,12 @@
 const User = require("../model/User");
 const Pet = require("../model/Pet");
 
+const fs = require("fs");
+const util = require("util");
+const unlinkFile = util.promisify(fs.unlink);
+
+const { uploadFile, getFileStream } = require("../s3");
+
 const getUserPets = async (req, res) => {
     const username = req.username;
     const foundUser = await User.findOne({ username }).exec();
@@ -11,14 +17,15 @@ const getUserPets = async (req, res) => {
 };
 
 const createPet = async (req, res) => {
+    console.log("this activated");
     const requiredFields = [
         "name",
         "type",
         "breed",
         "foodAllergies",
         "congenitalDisease",
-        "image", // TODO: add an endpoint for image.
     ];
+    const image = req.file;
     const { description, ...fields } = req.body;
     const hasAllRequiredFields = requiredFields.every(
         (field) => field in fields
@@ -27,13 +34,18 @@ const createPet = async (req, res) => {
     const username = req.username;
     const foundUser = await User.findOne({ username }).exec();
 
-    if (!hasAllRequiredFields)
+    const uploadResult = await uploadFile(image);
+    await unlinkFile(image.path);
+    console.log(uploadResult);
+
+    if (!hasAllRequiredFields || !image)
         return res.status(400).json({ error: "Missing required fields" });
 
     try {
         const result = await Pet.create({
             ...fields,
             ownerId: foundUser._id,
+            image: uploadResult.Key,
             description,
         });
         res.status(201).json(result);

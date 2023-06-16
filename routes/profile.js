@@ -13,6 +13,6 @@ router
 router
     .route("/avatar")
     .get(profileController.getAvatar)
-    .put(upload.single('avatar'), profileController.updateAvatar);
+    .put(upload.single("avatar"), profileController.updateAvatar);
 
 module.exports = router;

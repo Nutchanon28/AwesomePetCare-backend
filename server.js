@@ -28,7 +28,9 @@ app.use(cookieParser());
 
 app.get("/images/:key", (req, res) => {
     console.log(req.params);
-    const key = req.params.key;
+    const key = req.params.key; // TODO: fix 403 s3 error when image doesn't exist
+
+    if (!key) return res.status(400).json({ message: "Image key missing" });
     const readStream = getFileStream(key);
 
     readStream.pipe(res);
