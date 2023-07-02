@@ -12,7 +12,7 @@ const handleNewUser = async (req, res) => {
     if (duplicate) return res.sendStatus(409);
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10); // put in env
 
         const result = await User.create({
             username: username,
