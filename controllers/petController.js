@@ -17,6 +17,8 @@ const getUserPets = async (req, res) => {
 };
 
 const createPet = async (req, res) => {
+    console.log(req.body);
+    console.log(req.file);
     const requiredFields = [
         "name",
         "type",
@@ -55,6 +57,8 @@ const createPet = async (req, res) => {
 };
 
 const updatePet = async (req, res) => {
+    console.log(req.body);
+    // console.log(req.file);
     if (!req?.params?.id)
         return res.status(400).message({ message: "Pet ID required" });
 
@@ -75,12 +79,27 @@ const updatePet = async (req, res) => {
         const uploadResult = await uploadFile(req.file);
         await unlinkFile(req.file.path);
         foundPet.image = uploadResult.Key;
-        console.log(uploadResult);
+        // console.log(uploadResult);
     }
 
     const result = await foundPet.save();
-    console.log(foundPet);
+    // console.log(foundPet);
     res.json(result);
 };
 
-module.exports = { getUserPets, createPet, updatePet };
+const deletePet = async (req, res) => {
+    if (!req?.params?.id)
+        return res.status(400).json({ message: "Pet ID required" });
+
+    const foundPet = await Pet.findOne({ _id: req.params.id }).exec();
+    if (!foundPet) {
+        return res
+            .status(404)
+            .json({ message: `No pet matches ID ${req.params.id}.` });
+    }
+
+    const result = await foundPet.deleteOne();
+    res.json(result);
+};
+
+module.exports = { getUserPets, createPet, updatePet, deletePet };

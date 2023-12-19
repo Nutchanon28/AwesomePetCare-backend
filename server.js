@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get("/images/:key", (req, res) => {
-    console.log(req.params);
+    // console.log(req.params);
     const key = req.params.key; // TODO: fix 403 s3 error when image doesn't exist
 
     if (!key) return res.status(400).json({ message: "Image key missing" });
@@ -45,6 +45,8 @@ app.use("/logout", require("./routes/logout"));
 app.use(verifyJWT);
 app.use("/profile", require("./routes/profile"));
 app.use("/pet", require("./routes/pet"));
+
+app.use("/create-checkout-session", require("./routes/payment"));
 
 app.all("*", async (req, res) => {
     const users = await User.find();

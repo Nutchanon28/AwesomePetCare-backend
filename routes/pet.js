@@ -10,6 +10,9 @@ router
     .get(petController.getUserPets)
     .post(upload.single("image"), petController.createPet);
 
-router.route("/:id").put(upload.single("image"), petController.updatePet);
+router
+    .route("/:id")
+    .put(upload.single("image"), petController.updatePet)
+    .delete(petController.deletePet);
 
 module.exports = router;
