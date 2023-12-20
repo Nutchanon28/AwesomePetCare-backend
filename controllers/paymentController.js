@@ -1,7 +1,12 @@
+const Ticket = require("../model/Ticket");
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 const createPaymentSession = async (req, res) => {
-    const { tier, pets, time } = req.body;
+    const username = req.username;
+    const { service, tier, pets, time } = req.body;
+
+    const foundUser = await User.findOne({ username }).exec();
+
     const petPriceDatas = pets.map((pet) => {
         return {
             price_data: {
@@ -36,6 +41,18 @@ const createPaymentSession = async (req, res) => {
             success_url: `${process.env.CLIENT_URL}/`,
             cancel_url: `${process.env.CLIENT_URL}/profile`,
         });
+        console.log(session);
+
+        // const result = await Ticket.create({
+        //     userId: foundUser._id,
+        //     petsId: pets.map((pet) => pet._id),
+        //     service,
+        //     datetime: time,
+        //     price: 100,
+        //     status: "unpaid",
+        // });
+        // console.log(result);
+
         res.json({ url: session.url });
     } catch (e) {
         res.status(500).json({ error: e.message });
