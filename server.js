@@ -6,12 +6,14 @@ const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const verifyJWT = require("./middleware/verifyJWT");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const credentials = require("./middleware/credentials");
 const mongoose = require("mongoose");
 const connectDB = require("./config/dbConn");
 const User = require("./model/User");
 const PORT = process.env.PORT || 3500;
 
+const stripeWebhookController = require("./controllers/stripeWebhookController");
 const { getFileStream } = require("./s3");
 
 connectDB();
@@ -19,6 +21,12 @@ connectDB();
 app.use(credentials);
 
 app.use(cors(corsOptions));
+
+app.post(
+    "/webhook",
+    bodyParser.raw({ type: "application/json" }),
+    stripeWebhookController.webhook
+);
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -46,7 +54,7 @@ app.use(verifyJWT);
 app.use("/profile", require("./routes/profile"));
 app.use("/pet", require("./routes/pet"));
 
-app.use("/create-checkout-session", require("./routes/payment"));
+app.use("/stripe", require("./routes/payment"));
 
 app.all("*", async (req, res) => {
     const users = await User.find();
