@@ -57,10 +57,10 @@ app.use("/ticket", require("./routes/ticket"));
 
 app.use("/stripe", require("./routes/payment"));
 
+app.use("/users", require("./routes/user"));
+
 app.all("*", async (req, res) => {
-    const users = await User.find();
-    res.status(200);
-    res.json(users);
+    res.sendStatus(404);
 });
 
 mongoose.connection.once("open", () => {
