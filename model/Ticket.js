@@ -23,7 +23,7 @@ const ticketSchema = new Schema({
         required: true,
     },
     price: {
-        type: Object,
+        type: Number,
         required: true,
     },
     // status: unpaid, scheduled, pending, completed, canceled

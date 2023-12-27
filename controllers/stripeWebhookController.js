@@ -36,7 +36,7 @@ const webhook = async (req, res) => {
                 petsId: JSON.parse(petsId),
                 service,
                 datetime: time,
-                price,
+                price: parseInt(price),
                 status: "booked", // booked, canceled, done
             });
             console.log("The Ticket was created.");

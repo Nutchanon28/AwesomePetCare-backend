@@ -53,6 +53,7 @@ app.use("/logout", require("./routes/logout"));
 app.use(verifyJWT);
 app.use("/profile", require("./routes/profile"));
 app.use("/pet", require("./routes/pet"));
+app.use("/ticket", require("./routes/ticket"));
 
 app.use("/stripe", require("./routes/payment"));
 
