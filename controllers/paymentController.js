@@ -47,7 +47,7 @@ const createPaymentSession = async (req, res) => {
             mode: "payment",
             customer: customer.id,
             line_items: priceDatas,
-            success_url: `${process.env.CLIENT_URL}/`,
+            success_url: `${process.env.CLIENT_URL}/tickets`,
             cancel_url: `${process.env.CLIENT_URL}/book_service/pet_grooming`,
         });
         // console.log(session);

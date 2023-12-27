@@ -23,6 +23,9 @@ const handleLogout = async (req, res) => {
 
     // res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None" });
+    res.clearCookie("navbar");
+
+    console.log("cookie cleared!");
     res.sendStatus(204);
 };
 

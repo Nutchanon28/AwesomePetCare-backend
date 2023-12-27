@@ -10,11 +10,13 @@ const handleLogin = async (req, res) => {
             .json({ message: "Username and password are required." });
 
     const foundUser = await User.findOne({ username }).exec();
+    console.log("foundUser = ", foundUser);
     if (!foundUser) return res.sendStatus(401);
 
     const match = await bcrypt.compare(password, foundUser.password);
     if (match) {
         const roles = Object.values(foundUser.roles).filter(Boolean);
+        console.log(roles);
 
         const accessToken = jwt.sign(
             {
@@ -44,6 +46,20 @@ const handleLogin = async (req, res) => {
             sameSite: "None",
             maxAge: 24 * 60 * 60 * 1000,
         });
+
+        const navbar = roles.includes(5150)
+            ? "5150"
+            : roles.includes(2001)
+            ? "2001"
+            : null;
+
+        if (navbar) {
+            res.cookie("navbar", navbar, {
+                secure: true,
+                sameSite: "None",
+                maxAge: 24 * 60 * 60 * 1000,
+            });
+        }
 
         res.json({ roles, accessToken });
     } else {
