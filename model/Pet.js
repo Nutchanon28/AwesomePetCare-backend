@@ -2,11 +2,6 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const petSchema = new Schema({
-    ownerId: {
-        type: Schema.ObjectId,
-        require: true,
-        ref: "User",
-    },
     name: {
         type: String,
         require: true,

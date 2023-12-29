@@ -7,6 +7,7 @@ const unlinkFile = util.promisify(fs.unlink);
 
 const { uploadFile, getFileStream } = require("../s3");
 
+// This no longer needed
 const getUserPets = async (req, res) => {
     const username = req.username;
     const foundUser = await User.findOne({ username }).exec();
@@ -45,10 +46,12 @@ const createPet = async (req, res) => {
     try {
         const result = await Pet.create({
             ...fields,
-            ownerId: foundUser._id,
             image: uploadResult.Key,
             description,
         });
+        foundUser.pets.push(result._id);
+        const userResult = await foundUser.save();
+        console.log(userResult);
         res.status(201).json(result);
     } catch (error) {
         console.log(error);
@@ -56,6 +59,7 @@ const createPet = async (req, res) => {
     }
 };
 
+// Could be optimized to find from user maybe?
 const updatePet = async (req, res) => {
     console.log(req.body);
     // console.log(req.file);

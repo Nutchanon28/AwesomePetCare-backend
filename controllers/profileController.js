@@ -8,13 +8,18 @@ const { uploadFile, getFileStream } = require("../s3");
 
 const getProfile = async (req, res) => {
     const username = req.username;
-    const foundUser = await User.findOne({ username }).exec();
-    const user = {
-        username: foundUser?.username,
-        name: foundUser?.name,
-        avatarFileKey: foundUser?.avatarFileKey 
-    };
-    res.status(200).json({ user });
+    const foundUser = await User.findOne({ username })
+        .select("-password -refreshToken")
+        .populate("pets")
+        .exec();
+
+    // const user = {
+    //     username: foundUser?.username,
+    //     name: foundUser?.name,
+    //     avatarFileKey: foundUser?.avatarFileKey,
+    // };
+    console.log(foundUser);
+    res.status(200).json(foundUser);
 };
 
 const updateProfile = async (req, res) => {

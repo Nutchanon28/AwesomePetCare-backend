@@ -18,6 +18,12 @@ const userSchema = new Schema({
         required: true,
     },
     name: String,
+    pets: [
+        {
+            type: Schema.ObjectId,
+            ref: "Pet",
+        },
+    ],
     avatarFileKey: String,
     refreshToken: String,
 });
